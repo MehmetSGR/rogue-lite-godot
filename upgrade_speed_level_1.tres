@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="UpgradeSpeed" format=3 uid="uid://2yhboab06oe6"]
+
+[ext_resource type="Script" uid="uid://c8wcpvktrm2q7" path="res://Script/Upgrades/upgrade_speed.gd" id="1_t22tf"]
+
+[resource]
+script = ExtResource("1_t22tf")
+upgrade_name = "Hız"
+description = "Hızı 50 arttırır"
+metadata/_custom_type_script = "uid://c8wcpvktrm2q7"

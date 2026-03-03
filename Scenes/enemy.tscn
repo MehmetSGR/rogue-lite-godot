@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bf0ff420c5kw8"]
+
+[ext_resource type="Script" uid="uid://shuumq2w1v6o" path="res://Script/enemy.gd" id="1_hghv2"]
+[ext_resource type="Texture2D" uid="uid://clfgjuvjk6otk" path="res://basic asset pack/Basic Undead Sprites/Basic Undead 4x.png" id="2_1f0kj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_afpow"]
+radius = 11.756407
+height = 65.04577
+
+[node name="Enemy" type="CharacterBody2D" unique_id=2097582681 groups=["enemy"]]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_hghv2")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=68038743]
+modulate = Color(0.62975407, 0.52870744, 0, 1)
+texture = ExtResource("2_1f0kj")
+region_enabled = true
+region_rect = Rect2(304, 148, 40, 64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=229773893]
+position = Vector2(-2, 0)
+scale = Vector2(1.02072, 0.92242736)
+shape = SubResource("CapsuleShape2D_afpow")

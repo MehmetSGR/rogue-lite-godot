@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://vghxse1ic0i3"]
+
+[ext_resource type="Script" uid="uid://cesh6yhy50ung" path="res://Script/xp_gem.gd" id="1_b7ot8"]
+[ext_resource type="Texture2D" uid="uid://1k6abxcm4mlu" path="res://basic asset pack/Basic Undead Sprites/Basic Undead 1x.png" id="2_3vxck"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5pcrp"]
+radius = 6.0827627
+
+[node name="XPGem" type="Area2D" unique_id=1469689684]
+collision_layer = 2
+script = ExtResource("1_b7ot8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=934348041]
+texture = ExtResource("2_3vxck")
+region_enabled = true
+region_rect = Rect2(20, 20, 14, 14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2082468697]
+shape = SubResource("CircleShape2D_5pcrp")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

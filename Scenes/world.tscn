@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://c188vv381gs73"]
+
+[ext_resource type="Script" uid="uid://btq5ggfiwrkug" path="res://Script/world.gd" id="1_5a7ea"]
+[ext_resource type="Resource" uid="uid://orwjhfliwdvl" path="res://basic_enemy.tres" id="2_5a7ea"]
+[ext_resource type="PackedScene" uid="uid://tewk0u8unihe" path="res://Scenes/player.tscn" id="2_go701"]
+[ext_resource type="Script" uid="uid://bfqtq12ln7gav" path="res://Script/upgrade_data.gd" id="3_fo5ed"]
+[ext_resource type="Resource" uid="uid://2yhboab06oe6" path="res://upgrade_speed_level_1.tres" id="4_5ukr8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_go701"]
+bg_color = Color(1, 0.2901961, 0.03137255, 1)
+
+[node name="World" type="Node2D" unique_id=986628203]
+script = ExtResource("1_5a7ea")
+basic_enemy_data = ExtResource("2_5a7ea")
+available_upgrades = Array[ExtResource("3_fo5ed")]([ExtResource("4_5ukr8")])
+
+[node name="Player" parent="." unique_id=18757874 instance=ExtResource("2_go701")]
+position = Vector2(586, 311)
+scale = Vector2(0.5, 0.5)
+
+[node name="Timer" type="Timer" parent="." unique_id=1175991844]
+wait_time = 2.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1826514523]
+
+[node name="XPBar" type="ProgressBar" parent="CanvasLayer" unique_id=816265787]
+offset_left = 98.0
+offset_top = 2.0
+offset_right = 1081.0
+offset_bottom = 29.0
+
+[node name="HPBar" type="ProgressBar" parent="CanvasLayer" unique_id=1134665051]
+offset_left = 18.0
+offset_top = 76.0
+offset_right = 270.0
+offset_bottom = 103.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_go701")
+
+[node name="UpgradeMenu" type="Control" parent="CanvasLayer" unique_id=1067503792]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 0
+offset_left = -6.0
+offset_top = -98.0
+offset_right = 34.0
+offset_bottom = -58.0
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UpgradeMenu" unique_id=1082539858]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 359.0
+offset_right = 656.0
+offset_bottom = 466.0
+color = Color(0, 0, 0, 0.5764706)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UpgradeMenu/ColorRect" unique_id=1022211128]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Opt1" type="Button" parent="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer" unique_id=1535813851]
+layout_mode = 2
+text = "Hız Artır"
+
+[node name="Opt2" type="Button" parent="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer" unique_id=341937878]
+layout_mode = 2
+text = "Can Yenile/Artır"
+
+[node name="Opt3" type="Button" parent="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer" unique_id=40376593]
+layout_mode = 2
+text = "Ateş Hızı Artır"
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="pressed" from="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1" to="." method="_on_opt_1_pressed"]
+[connection signal="pressed" from="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2" to="." method="_on_opt_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt3" to="." method="_on_opt_3_pressed"]

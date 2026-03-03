@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://tewk0u8unihe"]
+
+[ext_resource type="Script" uid="uid://wtu7lvn5rmkr" path="res://Script/player.gd" id="1_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://bw261ioxgv8it" path="res://basic asset pack/Basic Undead Sprites/Basic Undead 2x.png" id="2_cvnsp"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6t5aa"]
+radius = 7.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cvnsp"]
+
+[node name="Player" type="CharacterBody2D" unique_id=18757874 groups=["player"]]
+script = ExtResource("1_cvnsp")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1637049394]
+scale = Vector2(2, 2)
+texture = ExtResource("2_cvnsp")
+region_enabled = true
+region_rect = Rect2(80, 38, 20, 30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1589742951]
+position = Vector2(0, -1)
+scale = Vector2(2, 2)
+shape = SubResource("CapsuleShape2D_6t5aa")
+
+[node name="Timer" type="Timer" parent="." unique_id=317648507]
+autostart = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1264116891]
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="MagnetArea" type="Area2D" parent="." unique_id=31825455]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MagnetArea" unique_id=555243319]
+scale = Vector2(4.1200004, 4.1200004)
+shape = SubResource("CapsuleShape2D_cvnsp")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="area_entered" from="MagnetArea" to="." method="_on_magnet_area_area_entered"]
