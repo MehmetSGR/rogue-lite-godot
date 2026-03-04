@@ -7,6 +7,7 @@ extends Node2D
 @onready var hp_bar = $CanvasLayer/HPBar
 @onready var xp_bar = $CanvasLayer/XPBar 
 @onready var upgrade_menu = $CanvasLayer/UpgradeMenu
+@onready var projectile_container = $ProjectileContainer
 
 var current_options: Array[UpgradeData] = []
 var enemy_scene = preload("res://Scenes/enemy.tscn")
@@ -19,7 +20,6 @@ func _ready():
 	hp_bar.max_value = player.max_health
 	hp_bar.value = player.current_health
 	
-	player.leveled_up.connect(_on_player_leveled_up)
 	upgrade_menu.hide()
 
 func _process(_delta):
@@ -30,18 +30,28 @@ func _on_player_xp_changed(current, total):
 	xp_bar.max_value = total
 	xp_bar.value = current
 
-func _on_player_leveled_up(new_level):
-	# İleride buraya seviye atlama ekranı gelecek
+func _on_player_leveled_up(_new_level): # Kullanılmayan parametreye _ ekledik
 	get_tree().paused = true
+	current_options.clear() # Eski seçenekleri temizle (Önemli!)
+	
 	var pool = available_upgrades.duplicate()
 	pool.shuffle()
 	
-	for i in range(min(3, pool.size())):
+	# Kaç seçenek göstereceğimizi belirle (Ya 3 ya da elimizdeki kadar)
+	var count = min(3, pool.size())
+	
+	# Menüdeki tüm yazıları önce temizle
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1.text = ""
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2.text = ""
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt3.text = ""
+	
+	for i in range(count):
 		current_options.append(pool[i])
-		
-	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1.text = current_options[0].upgrade_name
-	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2.text = current_options[1].upgrade_name
-	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt3.text = current_options[2].upgrade_name
+		# Sadece var olan seçeneklerin yazısını doldur
+		var opt_label = get_node("CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt" + str(i+1))
+		opt_label.text = pool[i].upgrade_name
+	
+	upgrade_menu.show() # Menüyü görünür yapmayı unutma
 	
 
 func _on_upgrade_selected(index: int):
@@ -52,7 +62,13 @@ func _on_upgrade_selected(index: int):
 func _on_timer_timeout():
 	var new_enemy = enemy_scene.instantiate()
 	new_enemy.data = basic_enemy_data 
-	new_enemy.global_position = Vector2(randf_range(0, 1000), randf_range(0,1000))
+	
+	var random_angle = randf() * 2 * PI
+	var spawn_distance = 750
+	var spawn_direction = Vector2(cos(random_angle), sin(random_angle))
+	var spawn_pos = player.global_position + (spawn_direction * spawn_distance)
+	
+	new_enemy.global_position = spawn_pos
 	add_child(new_enemy)
 	
 

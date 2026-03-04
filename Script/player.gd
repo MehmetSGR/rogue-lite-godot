@@ -73,10 +73,13 @@ func shoot():
 		
 		# Mermiyi oluştur ve fırlat
 		var bullet = PoolManager.get_bullet()
+		if bullet.get_parent():
+			bullet.get_parent().remove_child(bullet)
+			
 		bullet.activate(global_position, global_position.direction_to(target.global_position))
 		bullet.global_position = global_position
 		bullet.direction = global_position.direction_to(target.global_position)
-		get_tree().root.add_child(bullet)
+		get_tree().current_scene.get_node("ProjectileContainer").add_child(bullet)
 	
 
 func _on_timer_timeout() -> void:

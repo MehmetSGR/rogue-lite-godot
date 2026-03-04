@@ -71,6 +71,8 @@ text = "Can Yenile/Artır"
 layout_mode = 2
 text = "Ateş Hızı Artır"
 
+[node name="ProjectileContainer" type="Node2D" parent="." unique_id=1902349563]
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1" to="." method="_on_opt_1_pressed"]
 [connection signal="pressed" from="CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2" to="." method="_on_opt_2_pressed"]

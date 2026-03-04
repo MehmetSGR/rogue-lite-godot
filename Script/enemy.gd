@@ -41,8 +41,8 @@ func die():
 	gem.global_position = global_position # Düşmanın öldüğü yer
 	get_tree().root.add_child(gem)
 	
-	var random_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
-	var random_force = randf_range(200, 400)
+	var random_direction = Vector2.RIGHT.rotated(randf() * 2 * PI)
+	var random_force = randf_range(100, 200)
 	if gem.has_method("apply_scatter"):
 		gem.apply_scatter(random_direction * random_force)
 		
