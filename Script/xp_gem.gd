@@ -1,10 +1,12 @@
 extends Area2D
 
-var xp_amount = 1 # Bu kristal kaç puan verecek?
-var move_speed = 0
 var target = null # Mıknatıs etkisi için oyuncu
+var move_speed = 0
+var xp_amount = 1 # Bu kristal kaç puan verecek?
 var is_being_pulled = false
-
+var speed = 0.0
+var max_speed = 1600.0
+var accelariton = 1500.0
 var scatter_velocity = Vector2.ZERO
 var friction = 0.92
 
@@ -17,6 +19,11 @@ func _process(delta):
 	if is_being_pulled and target:
 		move_speed = lerp(move_speed, 600.0, 0.1)
 		global_position = global_position.move_toward(target.global_position, move_speed * delta)
+	
+	if target:
+		var direction = global_position.direction_to(target.global_position)
+		speed = move_toward(speed, max_speed, accelariton * delta)
+		global_position += direction * speed * delta 
 
 #Düşman tarafından çağrılacak fonksiyon
 func apply_scatter(force_vector: Vector2):

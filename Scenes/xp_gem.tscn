@@ -7,7 +7,7 @@
 radius = 6.0827627
 
 [node name="XPGem" type="Area2D" unique_id=1469689684]
-collision_layer = 2
+collision_layer = 8
 script = ExtResource("1_b7ot8")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=934348041]

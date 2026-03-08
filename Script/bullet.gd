@@ -1,11 +1,13 @@
 extends Area2D
 
 var speed = 600
+var damage = 1.0
 var direction = Vector2.RIGHT
-var damage = 1.0 #Mermi hasarı
+
+func _ready():
+	top_level = true
 
 func _process(delta):
-	#Mermi sürekli belirlediği yöne gider
 	position += direction * speed * delta
 
 func deactivate():

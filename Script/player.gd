@@ -3,17 +3,19 @@ extends CharacterBody2D
 signal xp_changed(current_xp, required_xp)
 signal leveled_up(new_level)
 
-var fire_rate = 1.0
-var bullet_scene = preload("res://Scenes/bullet.tscn")
-var world_scene = preload("res://Scenes/world.tscn")
 
+@export var projectile_container_path: NodePath
 @export var max_health = 100.0
 @export var speed = 300.0
 
+var fire_rate = 1.0
 var level = 1
 var experience = 0
 var experience_required = 5
 var current_health = 100.0
+
+
+signal health_changed(current_hp)
 
 func _ready():
 	add_to_group("xp_gem")
@@ -30,25 +32,12 @@ func level_up():
 	level += 1
 	experience = 0
 	experience_required *= 1.5
-	leveled_up.emit(level)
+	
+	print("Seviye atladı. Yeni seviye : ", level)
+	
 	xp_changed.emit(experience, experience_required)
+	leveled_up.emit(level)
 	
-	
-	var upgrade_choice = randi() % 3
-	match upgrade_choice:
-		0:
-			speed += 50
-			print("Hız Arttı! Yeni Hız : ", speed)
-		1:
-			fire_rate *= 0.8
-			$Timer.wait_time = fire_rate
-			print("Ateş Hızı Arttı")
-		
-		2:
-			max_health += 20
-			current_health += 20
-			print("Maksimum Can Arttı!")
-		
 
 func _physics_process(_delta):
 	#Hareket yönünü al (WASD veya Ok tuşları otomatik tanımalıdır)
@@ -65,21 +54,24 @@ func _physics_process(_delta):
 func shoot():
 	var enemies = get_tree().get_nodes_in_group("enemy")
 	if enemies.size() > 0:
-		# En yakın düşmanı bulma algoritması
 		var target = enemies[0]
 		for enemy in enemies:
 			if global_position.distance_to(enemy.global_position) < global_position.distance_to(target.global_position):
 				target = enemy
 		
-		# Mermiyi oluştur ve fırlat
+		# Sadece mermiyi al ve olduğu yerde aktif et
 		var bullet = PoolManager.get_bullet()
+		
+		# Eğer mermi zaten bir yerdeyse, önce oradan çıkar.
 		if bullet.get_parent():
 			bullet.get_parent().remove_child(bullet)
-			
 		bullet.activate(global_position, global_position.direction_to(target.global_position))
-		bullet.global_position = global_position
-		bullet.direction = global_position.direction_to(target.global_position)
-		get_tree().current_scene.get_node("ProjectileContainer").add_child(bullet)
+		
+		var container = get_node_or_null(projectile_container_path)
+		if container:
+			container.add_child(bullet)
+		else:
+			get_tree().current_scene.add_child(bullet) # Yedek plan
 	
 
 func _on_timer_timeout() -> void:
@@ -90,6 +82,8 @@ func take_damage(amount):
 	print("Oyuncu Hasar Aldı! Kalan Can: ", current_health)
 	if current_health <= 0:
 		die()
+	
+	health_changed.emit(current_health)
 
 func die():
 	print("OYUN BİTTİ!")

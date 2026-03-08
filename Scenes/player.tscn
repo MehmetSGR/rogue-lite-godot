@@ -9,6 +9,7 @@ radius = 7.0
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cvnsp"]
 
 [node name="Player" type="CharacterBody2D" unique_id=18757874 groups=["player"]]
+collision_mask = 10
 script = ExtResource("1_cvnsp")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1637049394]

@@ -20,43 +20,52 @@ func _ready():
 	hp_bar.max_value = player.max_health
 	hp_bar.value = player.current_health
 	
+	player.health_changed.connect(func(hp): hp_bar.value = hp)
+	
+	# YENİ EKLE: Butonların tıklanma olaylarını (signal) koda bağlıyoruz
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1.pressed.connect(func(): _on_upgrade_selected(0))
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2.pressed.connect(func(): _on_upgrade_selected(1))
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt3.pressed.connect(func(): _on_upgrade_selected(2))
 	upgrade_menu.hide()
 
 func _process(_delta):
-	hp_bar.value = player.current_health
+	pass
 
 func _on_player_xp_changed(current, total):
 	# Barın maksimum değerini ve şu anki değerini güncelle
 	xp_bar.max_value = total
 	xp_bar.value = current
 
-func _on_player_leveled_up(_new_level): # Kullanılmayan parametreye _ ekledik
+func _on_player_leveled_up(_new_level): # Parametreye _ ekledik (temiz kod)
 	get_tree().paused = true
-	current_options.clear() # Eski seçenekleri temizle (Önemli!)
+	current_options.clear()
 	
 	var pool = available_upgrades.duplicate()
 	pool.shuffle()
 	
-	# Kaç seçenek göstereceğimizi belirle (Ya 3 ya da elimizdeki kadar)
-	var count = min(3, pool.size())
+	# Güvenlik: Elimizde kaç upgrade varsa (en fazla 3) o kadar göster
+	var num_to_show = min(3, pool.size())
 	
-	# Menüdeki tüm yazıları önce temizle
-	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1.text = ""
-	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2.text = ""
-	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt3.text = ""
+	# Önce tüm butonları gizle ki eski değerler kalmasın
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt1.hide()
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt2.hide()
+	$CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt3.hide()
 	
-	for i in range(count):
+	for i in range(num_to_show):
 		current_options.append(pool[i])
-		# Sadece var olan seçeneklerin yazısını doldur
-		var opt_label = get_node("CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt" + str(i+1))
-		opt_label.text = pool[i].upgrade_name
+		var opt_button = get_node("CanvasLayer/UpgradeMenu/ColorRect/VBoxContainer/Opt" + str(i+1))
+		opt_button.text = pool[i].upgrade_name
+		opt_button.show() # Sadece ihtiyacımız olan butonu göster
 	
-	upgrade_menu.show() # Menüyü görünür yapmayı unutma
+	upgrade_menu.show()
 	
 
 func _on_upgrade_selected(index: int):
 	if index < current_options.size():
 		current_options[index].apply_upgrade(player)
+	
+	current_options.clear()	
+	
 	resume_game()
 	
 func _on_timer_timeout():

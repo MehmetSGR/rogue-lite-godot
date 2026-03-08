@@ -39,7 +39,7 @@ func take_damage(amount):
 func die():
 	var gem = xp_gem_scene.instantiate()
 	gem.global_position = global_position # Düşmanın öldüğü yer
-	get_tree().root.add_child(gem)
+	get_tree().current_scene.call_deferred("add_child", gem)
 	
 	var random_direction = Vector2.RIGHT.rotated(randf() * 2 * PI)
 	var random_force = randf_range(100, 200)
